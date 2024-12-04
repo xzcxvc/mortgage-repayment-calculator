@@ -18,7 +18,7 @@ function App() {
               <h1 className="font-bold text-lg">Mortgage Calculator</h1>
               <span className="text-[14px] underline">Clear All</span>
             </div>
-            <div className="form py-2">
+            <div className="flex flex-col gap-4">
               <Input
                 id={"mortgateAmount"}
                 label={"Mortgage Amount"}
@@ -44,6 +44,23 @@ function App() {
                   value={"Test"}
                   element={<FaPercent className="text-[#334856]" />}
                   elementPosition={"right"}
+                />
+              </div>
+              <div>
+                <div className="font-semibold text-[#334856]">
+                  Mortgage Type
+                </div>
+                <Input
+                  id={"typeRepayment"}
+                  type={"radio"}
+                  value={"Test"}
+                  title={"Repayment"}
+                />
+                <Input
+                  id={"typeInterest"}
+                  type={"radio"}
+                  value={"Test"}
+                  title={"Interest Only"}
                 />
               </div>
             </div>
