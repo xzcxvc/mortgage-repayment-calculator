@@ -3,6 +3,7 @@ import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
 import "./App.css";
 import { FaPesoSign, FaPercent } from "react-icons/fa6";
+import Input from "./assets/components/Input.jsx";
 
 function App() {
   return (
@@ -18,67 +19,32 @@ function App() {
               <span className="text-[14px] underline">Clear All</span>
             </div>
             <div className="form py-2">
-              <div className="flex flex-col gap-2 w-full py-2 ">
-                <label
-                  htmlFor="mortgageAmt"
-                  className="font-semibold text-[#334856]"
-                >
-                  Mortgage Amount
-                </label>
-                <div className="relative w-full ring-1 ring-[#B1BABF] h-10 rounded-sm flex">
-                  <div className="bg-[#e6f4fc] px-3 rounded-l-sm flex items-center justify-center">
-                    <FaPesoSign className="text-[#334856]" />
-                  </div>
-                  <div className="w-full rounded-r-sm flex items-center px-2">
-                    <input
-                      type="text"
-                      className="w-full focus-within:outline-0"
-                    />
-                  </div>
-                </div>
-              </div>
-              <div className="flex gap-4">
-                <div className="flex flex-col gap-2 w-6/12 py-2">
-                  <label
-                    htmlFor="mortgageTerm"
-                    className="font-semibold text-[#334856]"
-                  >
-                    Mortgage Term
-                  </label>
-                  <div className="relative w-full ring-1 ring-[#B1BABF] h-10 rounded-sm flex">
-                    <div className="w-full rounded-r-md flex items-center px-2">
-                      <input
-                        id=""
-                        type="text"
-                        className="w-full focus-within:outline-0"
-                      />
-                    </div>
-                    <div className="bg-[#e6f4fc] px-3 rounded-r-sm flex items-center justify-center text-[#334856] font-semibold">
-                      Years
-                    </div>
-                  </div>
-                </div>
+              <Input
+                id={"mortgateAmount"}
+                label={"Mortgage Amount"}
+                type={"text"}
+                value={"Test"}
+                element={<FaPesoSign className="text-[#334856]" />}
+                elementPosition={"left"}
+              />
 
-                <div className="flex flex-col gap-2 w-6/12 py-2">
-                  <label
-                    htmlFor="mortgageTerm"
-                    className="font-semibold text-[#334856]"
-                  >
-                    Interest Rate
-                  </label>
-                  <div className="relative w-full ring-1 ring-[#B1BABF] h-10 rounded-sm flex">
-                    <div className="w-full rounded-r-md flex items-center px-2">
-                      <input
-                        id=""
-                        type="text"
-                        className="w-full focus-within:outline-0"
-                      />
-                    </div>
-                    <div className="bg-[#e6f4fc] px-3 rounded-r-sm flex items-center justify-center text-[#334856]">
-                      <FaPercent className="text-[#334856]" />
-                    </div>
-                  </div>
-                </div>
+              <div className="flex mobile:flex-col desktop:flex-row desktop:gap-4">
+                <Input
+                  id={"mortgageTerm"}
+                  label={"Mortgage Term"}
+                  type={"text"}
+                  value={"Test"}
+                  element={"years"}
+                  elementPosition={"right"}
+                />
+                <Input
+                  id={"mortgageInterest"}
+                  label={"Interest Rate"}
+                  type={"text"}
+                  value={"Test"}
+                  element={<FaPercent className="text-[#334856]" />}
+                  elementPosition={"right"}
+                />
               </div>
             </div>
           </div>
