@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
 import "./App.css";
@@ -8,6 +8,52 @@ import empty from "./assets/illustration-empty.svg";
 import calculator from "./assets/icon-calculator.svg";
 
 function App() {
+  const [formData, setFormData] = useState({
+    txtMortgageAmt: 0,
+    txtMortgageTerm: 0,
+    txtInterestRate: 0,
+    typeInterest: false,
+    typeRepayment: false,
+  });
+
+  const [selected, setSelected] = useState(false);
+
+  const handleInputChange = (e) => {
+    const { value, name, type } = e.target;
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: type === "number" ? parseFloat(value) : value,
+    }));
+  };
+
+  const handleRadioCheck = (name, checked) => {
+    setFormData((prev) => ({
+      ...prev,
+      [name]: checked,
+      ...(name === "typeInterest" && { typeRepayment: !checked }),
+      ...(name === "typeRepayment" && { typeInterest: !checked }),
+    }));
+    setSelected(name);
+  };
+
+  const handleParentClick = (e) => {
+    const target = e.target.closest("[data-name]"); // Find the closest element with data-name
+    if (!target) return; // Exit if no such element is found
+
+    const name = target.dataset.name; // Retrieve the name from data-name
+    const isAlreadyChecked = target.dataset.checked === "true"; // Check if already checked
+    if (isAlreadyChecked) return; // Prevent toggling if already checked
+
+    const checked = true; // Set to true since a radio button should only be checked
+    handleRadioCheck(name, checked);
+  };
+
+  useEffect(() => {
+    console.clear();
+    console.table({ formData, selected });
+  }, [formData]);
+
   return (
     <div className="w-screen">
       <div className="min-h-screen flex items-center justify-center">
@@ -23,48 +69,70 @@ function App() {
               </div>
               <div className="flex flex-col gap-4 relative">
                 <Input
-                  id={"mortgateAmount"}
-                  label={"Mortgage Amount"}
-                  type={"text"}
-                  value={"Test"}
-                  element={<FaPesoSign className="text-[#334856]" />}
-                  elementPosition={"left"}
+                  id="mortgageAmt"
+                  name="txtMortgageAmt"
+                  label="Mortgage Amount"
+                  type="number"
+                  element={<FaPesoSign />}
+                  elementPosition="left"
+                  onChange={handleInputChange}
+                  value={formData.txtMortgageAmt || ""}
                 />
 
-                <div className="flex mobile:flex-col desktop:flex-row desktop:gap-4">
+                <div className="flex mobile:flex-col desktop:flex-row desktop:gap-x-4 mobile:gap-y-4">
                   <Input
-                    id={"mortgageTerm"}
-                    label={"Mortgage Term"}
-                    type={"text"}
-                    value={"Test"}
-                    element={"years"}
-                    elementPosition={"right"}
+                    id="mortgageTerm"
+                    name="txtMortgageTerm"
+                    label="Mortgage Term"
+                    type="number"
+                    element="Years"
+                    elementPosition="right"
+                    onChange={handleInputChange}
+                    value={formData.txtMortgageTerm || ""}
                   />
                   <Input
-                    id={"mortgageInterest"}
-                    label={"Interest Rate"}
-                    type={"text"}
-                    value={"Test"}
+                    id="interestRate"
+                    name="txtInterestRate"
+                    label="Interest Rate"
+                    type="number"
                     element={<FaPercent className="text-[#334856]" />}
-                    elementPosition={"right"}
+                    elementPosition="right"
+                    onChange={handleInputChange}
+                    value={formData.txtInterestRate || ""}
                   />
                 </div>
                 <div>
                   <div className="font-semibold text-[#334856]">
                     Mortgage Type
                   </div>
-                  <Input
-                    id={"typeRepayment"}
-                    type={"radio"}
-                    value={"Test"}
-                    title={"Repayment"}
-                  />
-                  <Input
-                    id={"typeInterest"}
-                    type={"radio"}
-                    value={"Test"}
-                    title={"Interest Only"}
-                  />
+
+                  <div
+                    data-name="typeRepayment"
+                    data-checked={formData.typeRepayment}
+                  >
+                    <Input
+                      id="typeRepayment"
+                      name="typeRepayment"
+                      type="radio"
+                      title="Repayment"
+                      checked={formData.typeRepayment}
+                      onClick={handleParentClick}
+                    />
+                  </div>
+
+                  <div
+                    data-name="typeInterest"
+                    data-checked={formData.typeInterest}
+                  >
+                    <Input
+                      id="typeInterest"
+                      name="typeInterest"
+                      type="radio"
+                      title="Interest Only"
+                      checked={formData.typeInterest}
+                      onClick={handleParentClick}
+                    />
+                  </div>
                 </div>
 
                 <div className="w-9/12 py-2 ">
