@@ -56,13 +56,13 @@ const Input = ({
                 }
                   relative w-full ring-1 ring-[#B1BABF] h-10 rounded-sm flex hover:cursor-pointer hover:ring-1 hover:ring-[#D9DB30]`}
               >
-                <div className="px-3 rounded-l-sm flex items-center justify-center">
+                <div className="px-3 rounded-l-sm flex items-center justify-center ">
                   <input
                     id={id}
                     name={name}
                     type={type}
                     checked={checked}
-                    className="w-full focus-within:outline-0 border-2"
+                    className="w-full focus-within:outline-0 border-2 "
                     readOnly={readOnly}
                   />
                 </div>

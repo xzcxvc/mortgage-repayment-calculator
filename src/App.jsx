@@ -1,6 +1,4 @@
 import { useState, useEffect } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
 import "./App.css";
 import { FaPesoSign, FaPercent } from "react-icons/fa6";
 import Input from "./assets/components/Input.jsx";
@@ -38,14 +36,14 @@ function App() {
   };
 
   const handleParentClick = (e) => {
-    const target = e.target.closest("[data-name]"); // Find the closest element with data-name
-    if (!target) return; // Exit if no such element is found
+    const target = e.target.closest("[data-name]");
+    if (!target) return;
 
-    const name = target.dataset.name; // Retrieve the name from data-name
-    const isAlreadyChecked = target.dataset.checked === "true"; // Check if already checked
-    if (isAlreadyChecked) return; // Prevent toggling if already checked
+    const name = target.dataset.name;
+    const isAlreadyChecked = target.dataset.checked === "true";
+    if (isAlreadyChecked) return;
 
-    const checked = true; // Set to true since a radio button should only be checked
+    const checked = true;
     handleRadioCheck(name, checked);
   };
 
