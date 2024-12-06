@@ -49,21 +49,37 @@ function App() {
 
   useEffect(() => {
     console.clear();
-    console.table({ formData, selected });
+    console.table({ formData });
   }, [formData]);
 
+  const handleCalculate = () => {};
+
+  const handleClearForm = () => {
+    setFormData((prev) => ({
+      txtMortgageAmt: 0,
+      txtMortgageTerm: 0,
+      txtInterestRate: 0,
+      typeInterest: false,
+      typeRepayment: false,
+    }));
+  };
   return (
     <div className="w-screen">
       <div className="min-h-screen flex items-center justify-center">
         <div
           id="main"
-          className="flex desktop:flex-row tablet:flex-col mobile:flex-col desktop:rounded-2xl bg-white w-5/12 h-auto"
+          className="flex desktop:flex-row tablet:flex-col mobile:flex-col desktop:rounded-2xl bg-white w-6/12 h-auto"
         >
           <div className="desktop:w-6/12 px-7 py-6">
             <div>
               <div className="flex desktop:flex-row mobile:flex-col desktop:justify-between desktop:items-center pb-5">
                 <h1 className="font-bold text-lg">Mortgage Calculator</h1>
-                <span className="text-[14px] underline">Clear All</span>
+                <span
+                  className="text-[14px] underline cursor-pointer"
+                  onClick={handleClearForm}
+                >
+                  Clear All
+                </span>
               </div>
               <div className="flex flex-col gap-4 relative">
                 <Input
@@ -133,10 +149,10 @@ function App() {
                   </div>
                 </div>
 
-                <div className="w-9/12 py-2 ">
-                  <button className="flex gap-3 px-4 rounded-full bg-[#D9DB30] items-center justify-center w-full h-9">
+                <div className="desktop:w-9/12 tablet:w-full mobile:w-full py-2 ">
+                  <button className="flex gap-1 px-4 rounded-full bg-[#D9DB30] items-center justify-center w-full h-9">
                     <img src={calculator} alt="" />
-                    <span className="font-semibold flex justify-center">
+                    <span className="font-semibold flex justify-center text-sm">
                       Calculate Repayments
                     </span>
                   </button>
@@ -146,7 +162,7 @@ function App() {
           </div>
           <div
             id="results"
-            className="desktop:w-6/12 p-6 mobile:w-full bg-[#193040] desktop:rounded-r-2xl desktop:rounded-bl-[70px] flex items-center justify-center"
+            className="desktop:w-6/12 p-6 hidden mobile:w-full bg-[#193040] desktop:rounded-r-2xl desktop:rounded-bl-[70px] items-center justify-center"
           >
             <div className="flex-col flex gap-5 ">
               <img src={empty} alt="empty result" className=" h-40" />
@@ -159,6 +175,42 @@ function App() {
                   Complete the form and click "calculate repayments" to see what
                   your monthly repayments would be.
                 </span>
+              </div>
+            </div>
+          </div>
+
+          <div
+            id="results"
+            className="absolutedesktop:w-6/12 py-6 px-9 mobile:w-full bg-[#193040] desktop:rounded-r-2xl desktop:rounded-bl-[70px] flex justify-center"
+          >
+            <div className="flex-col flex gap-5">
+              <span className="text-white font-semibold flex text-xl">
+                Results shown here
+              </span>
+              <div className="flex flex-col gap-5">
+                <span className="text-md text-gray-400 flex ">
+                  Your results are shown below based on the information you
+                  provided. To adjust the results, edit the form and click
+                  "calculate repayments" again.
+                </span>
+
+                <div className="w-full relative bg-[#D9DB30] h-3 rounded-md">
+                  <div className="absolute w-full top-1 h-auto bg-[#0E2431] rounded-[5px] p-5 flex flex-col gap-2">
+                    <span className="text-sm text-gray-400 flex">
+                      Your monthly repayments
+                    </span>
+                    <h1 className="text-[#D9DB30] font-semibold text-4xl">
+                      $1,797.74
+                    </h1>
+                    <div className="divider w-full h-[1px] bg-[#B1BABF] my-5" />
+                    <span className="text-sm text-gray-400 flex">
+                      Total you'll repay over the term
+                    </span>
+                    <h1 className="text-white font-semibold text-2xl">
+                      $539,322.9
+                    </h1>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
