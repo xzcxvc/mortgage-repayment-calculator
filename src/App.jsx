@@ -12,7 +12,11 @@ function App() {
     txtInterestRate: 0,
     typeInterest: false,
     typeRepayment: false,
+    monthlyRepayment: 0,
+    totalBalance: 0,
   });
+
+  const [isCalculated, setIsCalculated] = useState(false);
 
   const [selected, setSelected] = useState(false);
 
@@ -49,20 +53,59 @@ function App() {
 
   useEffect(() => {
     console.clear();
-    console.table({ formData });
+    console.table({ formData, isCalculated });
   }, [formData]);
 
-  const handleCalculate = () => {};
+  const handleCalculate = () => {
+    const mortgageTerm = formData.txtMortgageTerm * 12;
+    const interestRate = formData.txtInterestRate / 100;
+    const totalBalance =
+      (formData.txtMortgageAmt * interestRate + formData.txtMortgageAmt) *
+      mortgageTerm;
+    const monthlyRepayment = totalBalance / mortgageTerm;
+
+    const formattedTotalBalance = `$${totalBalance.toLocaleString(undefined, {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    })}`;
+    const formattedMonthlyRepayment = `$${monthlyRepayment.toLocaleString(
+      undefined,
+      {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      }
+    )}`;
+
+    setFormData((prev) => ({
+      ...prev,
+      totalBalance: formattedTotalBalance,
+      monthlyRepayment: formattedMonthlyRepayment,
+    }));
+
+    setIsCalculated((prev) => ({
+      ...prev,
+      isCalculated: true,
+    }));
+  };
 
   const handleClearForm = () => {
+    setIsCalculated((prev) => ({
+      ...prev,
+      isCalculated: false,
+    }));
+
     setFormData((prev) => ({
+      ...prev,
       txtMortgageAmt: 0,
       txtMortgageTerm: 0,
       txtInterestRate: 0,
       typeInterest: false,
       typeRepayment: false,
+      monthlyRepayment: 0,
+      totalBalance: 0,
     }));
   };
+
   return (
     <div className="w-screen">
       <div className="min-h-screen flex items-center justify-center">
@@ -150,7 +193,10 @@ function App() {
                 </div>
 
                 <div className="desktop:w-9/12 tablet:w-full mobile:w-full py-2 ">
-                  <button className="flex gap-1 px-4 rounded-full bg-[#D9DB30] items-center justify-center w-full h-9">
+                  <button
+                    className="flex gap-1 px-4 rounded-full bg-[#D9DB30] items-center justify-center w-full h-9"
+                    onClick={handleCalculate}
+                  >
                     <img src={calculator} alt="" />
                     <span className="font-semibold flex justify-center text-sm">
                       Calculate Repayments
@@ -160,59 +206,57 @@ function App() {
               </div>
             </div>
           </div>
+
           <div
             id="results"
-            className="desktop:w-6/12 p-6 hidden mobile:w-full bg-[#193040] desktop:rounded-r-2xl desktop:rounded-bl-[70px] items-center justify-center"
+            className="desktop:w-6/12 relative py-6 px-9 mobile:w-full bg-[#193040] desktop:rounded-r-2xl desktop:rounded-bl-[70px] flex justify-center"
           >
-            <div className="flex-col flex gap-5 ">
-              <img src={empty} alt="empty result" className=" h-40" />
-              <div className="flex flex-col gap-2">
-                <span className="text-white font-semibold flex justify-center">
+            {isCalculated ? (
+              <div className="flex-col flex gap-5">
+                <span className="text-white font-semibold flex text-xl">
                   Results shown here
                 </span>
+                <div className="flex flex-col gap-5">
+                  <span className="text-md text-gray-400 flex ">
+                    Your results are shown below based on the information you
+                    provided. To adjust the results, edit the form and click
+                    "calculate repayments" again.
+                  </span>
 
-                <span className="text-sm text-gray-400 flex justify-center items-center text-center">
-                  Complete the form and click "calculate repayments" to see what
-                  your monthly repayments would be.
-                </span>
-              </div>
-            </div>
-          </div>
-
-          <div
-            id="results"
-            className="absolutedesktop:w-6/12 py-6 px-9 mobile:w-full bg-[#193040] desktop:rounded-r-2xl desktop:rounded-bl-[70px] flex justify-center"
-          >
-            <div className="flex-col flex gap-5">
-              <span className="text-white font-semibold flex text-xl">
-                Results shown here
-              </span>
-              <div className="flex flex-col gap-5">
-                <span className="text-md text-gray-400 flex ">
-                  Your results are shown below based on the information you
-                  provided. To adjust the results, edit the form and click
-                  "calculate repayments" again.
-                </span>
-
-                <div className="w-full relative bg-[#D9DB30] h-3 rounded-md">
-                  <div className="absolute w-full top-1 h-auto bg-[#0E2431] rounded-[5px] p-5 flex flex-col gap-2">
-                    <span className="text-sm text-gray-400 flex">
-                      Your monthly repayments
-                    </span>
-                    <h1 className="text-[#D9DB30] font-semibold text-4xl">
-                      $1,797.74
-                    </h1>
-                    <div className="divider w-full h-[1px] bg-[#B1BABF] my-5" />
-                    <span className="text-sm text-gray-400 flex">
-                      Total you'll repay over the term
-                    </span>
-                    <h1 className="text-white font-semibold text-2xl">
-                      $539,322.9
-                    </h1>
+                  <div className=" relative bg-[#D9DB30] rounded-md">
+                    <div className="relative top-1 h-auto bg-[#0E2431] rounded-[5px] p-5 flex flex-col gap-2">
+                      <span className="text-sm text-gray-400 flex">
+                        Your monthly repayments
+                      </span>
+                      <h1 className="text-[#D9DB30] font-semibold text-4xl">
+                        {formData.monthlyRepayment}
+                      </h1>
+                      <div className="divider w-full h-[1px] bg-[#B1BABF] my-5" />
+                      <span className="text-sm text-gray-400 flex">
+                        Total you'll repay over the term
+                      </span>
+                      <h1 className="text-white font-semibold text-2xl">
+                        {formData.totalBalance}
+                      </h1>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
+            ) : (
+              <div className="flex-col flex gap-5 ">
+                <img src={empty} alt="empty result" className=" h-40" />
+                <div className="flex flex-col gap-2">
+                  <span className="text-white font-semibold flex justify-center">
+                    Results shown here
+                  </span>
+
+                  <span className="text-sm text-gray-400 flex justify-center items-center text-center">
+                    Complete the form and click "calculate repayments" to see
+                    what your monthly repayments would be.
+                  </span>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
