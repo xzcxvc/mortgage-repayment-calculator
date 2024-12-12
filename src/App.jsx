@@ -54,6 +54,7 @@ function App() {
 
   useEffect(() => {
     console.clear();
+    console.log(errors.mType);
     console.table({ formData });
   }, [formData]);
 
@@ -179,7 +180,13 @@ function App() {
                     name="txtInterestRate"
                     label="Interest Rate"
                     type="number"
-                    element={<FaPercent className="text-[#334856]" />}
+                    element={
+                      <FaPercent
+                        className={`${
+                          !errors.iRate ? "text-[#334856]" : "text-white"
+                        }`}
+                      />
+                    }
                     elementPosition="right"
                     onChange={handleInputChange}
                     value={formData.txtInterestRate || ""}
