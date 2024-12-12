@@ -4,6 +4,7 @@ import { FaPesoSign, FaPercent } from "react-icons/fa6";
 import Input from "./assets/components/Input.jsx";
 import empty from "./assets/illustration-empty.svg";
 import calculator from "./assets/icon-calculator.svg";
+import { MdOutlineBikeScooter } from "react-icons/md";
 
 function App() {
   const [formData, setFormData] = useState({
@@ -17,7 +18,7 @@ function App() {
   });
 
   const [isCalculated, setIsCalculated] = useState(false);
-
+  const [errors, setErrors] = useState({});
   const [selected, setSelected] = useState(false);
 
   const handleInputChange = (e) => {
@@ -53,47 +54,69 @@ function App() {
 
   useEffect(() => {
     console.clear();
-    console.table({ formData, isCalculated });
+    console.table({ formData });
   }, [formData]);
 
-  const handleCalculate = () => {
-    const mortgageTerm = formData.txtMortgageTerm * 12;
-    const interestRate = formData.txtInterestRate / 100;
-    const totalBalance =
-      (formData.txtMortgageAmt * interestRate + formData.txtMortgageAmt) *
-      mortgageTerm;
-    const monthlyRepayment = totalBalance / mortgageTerm;
-
-    const formattedTotalBalance = `$${totalBalance.toLocaleString(undefined, {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    })}`;
-    const formattedMonthlyRepayment = `$${monthlyRepayment.toLocaleString(
-      undefined,
-      {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-      }
-    )}`;
-
-    setFormData((prev) => ({
-      ...prev,
-      totalBalance: formattedTotalBalance,
-      monthlyRepayment: formattedMonthlyRepayment,
-    }));
-
-    setIsCalculated((prev) => ({
-      ...prev,
-      isCalculated: true,
-    }));
+  const validateForm = () => {
+    const newErrors = {};
+    if (!formData.txtMortgageAmt) newErrors.mAmt = "This field is required";
+    if (!formData.txtInterestRate) newErrors.iRate = "This field is required";
+    if (!formData.txtMortgageTerm) newErrors.mTerm = "This field is required";
+    if (formData.typeRepayment === false && formData.typeInterest === false) {
+      newErrors.mType = "This field is required";
+    }
+    return newErrors;
   };
 
-  const handleClearForm = () => {
-    setIsCalculated((prev) => ({
-      ...prev,
-      isCalculated: false,
-    }));
+  const handleCalculate = (e) => {
+    const validationErrors = validateForm();
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    } else {
+      const mortgageTerm = formData.txtMortgageTerm * 12;
+      const interestRate = formData.txtInterestRate / 100;
+      const totalBalance =
+        (formData.txtMortgageAmt * interestRate + formData.txtMortgageAmt) *
+        mortgageTerm;
+      const monthlyRepayment = totalBalance / mortgageTerm;
 
+      const formattedTotalBalance = `$${totalBalance.toLocaleString(undefined, {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      })}`;
+      const formattedMonthlyRepayment = `$${monthlyRepayment.toLocaleString(
+        undefined,
+        {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        }
+      )}`;
+
+      setFormData((prev) => ({
+        ...prev,
+        totalBalance: formattedTotalBalance,
+        monthlyRepayment: formattedMonthlyRepayment,
+      }));
+
+      setIsCalculated((prev) => ({
+        ...prev,
+        isCalculated: true,
+      }));
+    }
+  };
+
+  useEffect(() => {
+    setFormData((prev) => ({
+      ...prev,
+      totalBalance:
+        (prev.txtMortgageAmt * (prev.txtInterestRate / 100) +
+          prev.txtMortgageAmt) *
+        (prev.txtMortgageTerm * 12),
+    }));
+  }, []);
+
+  const handleClearForm = () => {
     setFormData((prev) => ({
       ...prev,
       txtMortgageAmt: 0,
@@ -104,6 +127,8 @@ function App() {
       monthlyRepayment: 0,
       totalBalance: 0,
     }));
+
+    setIsCalculated(prev);
   };
 
   return (
@@ -134,6 +159,7 @@ function App() {
                   elementPosition="left"
                   onChange={handleInputChange}
                   value={formData.txtMortgageAmt || ""}
+                  error={errors.mAmt}
                 />
 
                 <div className="flex mobile:flex-col desktop:flex-row desktop:gap-x-4 mobile:gap-y-4">
@@ -146,6 +172,7 @@ function App() {
                     elementPosition="right"
                     onChange={handleInputChange}
                     value={formData.txtMortgageTerm || ""}
+                    error={errors.mTerm}
                   />
                   <Input
                     id="interestRate"
@@ -156,6 +183,7 @@ function App() {
                     elementPosition="right"
                     onChange={handleInputChange}
                     value={formData.txtInterestRate || ""}
+                    error={errors.iRate}
                   />
                 </div>
                 <div>
@@ -190,6 +218,9 @@ function App() {
                       onClick={handleParentClick}
                     />
                   </div>
+                  <span className="text-[#D73329] font-semibold text-xs">
+                    {errors.mType}
+                  </span>
                 </div>
 
                 <div className="desktop:w-9/12 tablet:w-full mobile:w-full py-2 ">
@@ -206,57 +237,58 @@ function App() {
               </div>
             </div>
           </div>
-
           <div
             id="results"
-            className="desktop:w-6/12 relative py-6 px-9 mobile:w-full bg-[#193040] desktop:rounded-r-2xl desktop:rounded-bl-[70px] flex justify-center"
+            className="desktop:w-6/12 p-6 mobile:w-full bg-[#193040] desktop:rounded-r-2xl desktop:rounded-bl-[70px] flex items-center justify-center"
           >
-            {isCalculated ? (
-              <div className="flex-col flex gap-5">
-                <span className="text-white font-semibold flex text-xl">
+            <div
+              className={`${isCalculated ? "hidden" : "flex"} flex-col gap-5`}
+            >
+              <img src={empty} alt="empty result" className=" h-40" />
+              <div className="flex flex-col gap-2">
+                <span className="text-white font-semibold flex justify-center">
                   Results shown here
                 </span>
-                <div className="flex flex-col gap-5">
-                  <span className="text-md text-gray-400 flex ">
-                    Your results are shown below based on the information you
-                    provided. To adjust the results, edit the form and click
-                    "calculate repayments" again.
-                  </span>
 
-                  <div className=" relative bg-[#D9DB30] rounded-md">
-                    <div className="relative top-1 h-auto bg-[#0E2431] rounded-[5px] p-5 flex flex-col gap-2">
-                      <span className="text-sm text-gray-400 flex">
-                        Your monthly repayments
-                      </span>
-                      <h1 className="text-[#D9DB30] font-semibold text-4xl">
-                        {formData.monthlyRepayment}
-                      </h1>
-                      <div className="divider w-full h-[1px] bg-[#B1BABF] my-5" />
-                      <span className="text-sm text-gray-400 flex">
-                        Total you'll repay over the term
-                      </span>
-                      <h1 className="text-white font-semibold text-2xl">
-                        {formData.totalBalance}
-                      </h1>
-                    </div>
+                <span className="text-sm text-gray-400 flex justify-center items-center text-center">
+                  Complete the form and click "calculate repayments" to see what
+                  your monthly repayments would be.
+                </span>
+              </div>
+            </div>
+
+            <div
+              className={`${isCalculated ? "flex" : "hidden"} flex-col gap-5`}
+            >
+              <span className="text-white font-semibold flex text-xl">
+                Results shown here
+              </span>
+              <div className="flex flex-col gap-5">
+                <span className="text-md text-gray-400 flex ">
+                  Your results are shown below based on the information you
+                  provided. To adjust the results, edit the form and click
+                  "calculate repayments" again.
+                </span>
+
+                <div className=" relative bg-[#D9DB30] rounded-md">
+                  <div className="relative top-1 h-auto bg-[#0E2431] rounded-[5px] p-5 flex flex-col gap-2">
+                    <span className="text-sm text-gray-400 flex">
+                      Your monthly repayments
+                    </span>
+                    <h1 className="text-[#D9DB30] font-semibold text-4xl">
+                      {formData.monthlyRepayment}
+                    </h1>
+                    <div className="divider w-full h-[1px] bg-[#B1BABF] my-5" />
+                    <span className="text-sm text-gray-400 flex">
+                      Total you'll repay over the term
+                    </span>
+                    <h1 className="text-white font-semibold text-2xl">
+                      {formData.totalBalance}
+                    </h1>
                   </div>
                 </div>
               </div>
-            ) : (
-              <div className="flex-col flex gap-5 ">
-                <img src={empty} alt="empty result" className=" h-40" />
-                <div className="flex flex-col gap-2">
-                  <span className="text-white font-semibold flex justify-center">
-                    Results shown here
-                  </span>
-
-                  <span className="text-sm text-gray-400 flex justify-center items-center text-center">
-                    Complete the form and click "calculate repayments" to see
-                    what your monthly repayments would be.
-                  </span>
-                </div>
-              </div>
-            )}
+            </div>
           </div>
         </div>
       </div>
