@@ -179,7 +179,7 @@ function App() {
                     name="txtMortgageTerm"
                     label="Mortgage Term"
                     type="number"
-                    element="Years"
+                    element="years"
                     elementPosition="right"
                     onChange={handleInputChange}
                     value={formData.txtMortgageTerm || ""}
