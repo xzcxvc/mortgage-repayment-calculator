@@ -76,27 +76,22 @@ function App() {
       return;
     } else {
       setErrors({});
+      const mortgageAmt = formData.txtMortgageAmt;
       const mortgageTerm = formData.txtMortgageTerm * 12;
       const interestRate = formData.txtInterestRate / 100;
-      const totalBalance =
-        (formData.txtMortgageAmt * interestRate + formData.txtMortgageAmt) *
-        mortgageTerm;
-      const monthlyRepayment = totalBalance / mortgageTerm;
-      const monthlyInterest = formData.txtMortgageAmt * interestRate;
+      const monthlyRepayment =
+        (mortgageAmt / mortgageTerm) * interestRate +
+        mortgageAmt / mortgageTerm;
+      const totalBalance = monthlyRepayment * mortgageTerm;
+      const monthlyInterest = `${interestRate * 100} %`;
       const totaMonthlyInterest = monthlyInterest * mortgageTerm;
 
       const formattedTotalBalance = `$${totalBalance.toLocaleString(undefined, {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2,
       })}`;
+
       const formattedMonthlyRepayment = `$${monthlyRepayment.toLocaleString(
-        undefined,
-        {
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2,
-        }
-      )}`;
-      const formattedMonthlyInterest = `$${monthlyInterest.toLocaleString(
         undefined,
         {
           minimumFractionDigits: 2,
@@ -116,7 +111,7 @@ function App() {
         ...prev,
         totalBalance: formattedTotalBalance,
         monthlyRepayment: formattedMonthlyRepayment,
-        monthlyInterest: formattedMonthlyInterest,
+        monthlyInterest: monthlyInterest,
         totalInterest: formattedTotalInterest,
       }));
 
