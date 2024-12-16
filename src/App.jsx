@@ -16,12 +16,11 @@ function App() {
     monthlyRepayment: 0,
     monthlyInterest: 0,
     totalBalance: 0,
-    totalMonthlyInterest: 0,
+    totalInterest: 0,
   });
 
   const [isCalculated, setIsCalculated] = useState(false);
   const [errors, setErrors] = useState({});
-  const [selected, setSelected] = useState(false);
 
   const handleInputChange = (e) => {
     const { value, name, type } = e.target;
@@ -39,7 +38,6 @@ function App() {
       ...(name === "typeInterest" && { typeRepayment: !checked }),
       ...(name === "typeRepayment" && { typeInterest: !checked }),
     }));
-    setSelected(name);
   };
 
   const handleParentClick = (e) => {
@@ -77,6 +75,7 @@ function App() {
       setErrors(validationErrors);
       return;
     } else {
+      setErrors({});
       const mortgageTerm = formData.txtMortgageTerm * 12;
       const interestRate = formData.txtInterestRate / 100;
       const totalBalance =
@@ -105,7 +104,7 @@ function App() {
         }
       )}`;
 
-      const formattedTotaMonthlyInterest = `$${totaMonthlyInterest.toLocaleString(
+      const formattedTotalInterest = `$${totaMonthlyInterest.toLocaleString(
         undefined,
         {
           minimumFractionDigits: 2,
@@ -118,7 +117,7 @@ function App() {
         totalBalance: formattedTotalBalance,
         monthlyRepayment: formattedMonthlyRepayment,
         monthlyInterest: formattedMonthlyInterest,
-        totalMonthlyInterest: formattedTotaMonthlyInterest,
+        totalInterest: formattedTotalInterest,
       }));
 
       setIsCalculated((prev) => ({
@@ -310,7 +309,7 @@ function App() {
                     <h1 className="text-white font-semibold text-2xl">
                       {formData.typeRepayment
                         ? formData.totalBalance
-                        : formData.totalMonthlyInterest}
+                        : formData.totalInterest}
                     </h1>
                   </div>
                 </div>
