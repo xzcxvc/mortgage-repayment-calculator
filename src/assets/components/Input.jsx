@@ -47,7 +47,7 @@ const Input = ({
                   type={type}
                   value={value}
                   onChange={onChange}
-                  className="w-full focus-within:outline-0"
+                  className="w-full focus-within:outline-0 font-bold text-[#193040] px-2"
                 />
               </div>
             </div>

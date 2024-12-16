@@ -14,7 +14,9 @@ function App() {
     typeInterest: false,
     typeRepayment: false,
     monthlyRepayment: 0,
+    monthlyInterest: 0,
     totalBalance: 0,
+    totalMonthlyInterest: 0,
   });
 
   const [isCalculated, setIsCalculated] = useState(false);
@@ -81,6 +83,8 @@ function App() {
         (formData.txtMortgageAmt * interestRate + formData.txtMortgageAmt) *
         mortgageTerm;
       const monthlyRepayment = totalBalance / mortgageTerm;
+      const monthlyInterest = formData.txtMortgageAmt * interestRate;
+      const totaMonthlyInterest = monthlyInterest * mortgageTerm;
 
       const formattedTotalBalance = `$${totalBalance.toLocaleString(undefined, {
         minimumFractionDigits: 2,
@@ -93,11 +97,28 @@ function App() {
           maximumFractionDigits: 2,
         }
       )}`;
+      const formattedMonthlyInterest = `$${monthlyInterest.toLocaleString(
+        undefined,
+        {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        }
+      )}`;
+
+      const formattedTotaMonthlyInterest = `$${totaMonthlyInterest.toLocaleString(
+        undefined,
+        {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        }
+      )}`;
 
       setFormData((prev) => ({
         ...prev,
         totalBalance: formattedTotalBalance,
         monthlyRepayment: formattedMonthlyRepayment,
+        monthlyInterest: formattedMonthlyInterest,
+        totalMonthlyInterest: formattedTotaMonthlyInterest,
       }));
 
       setIsCalculated((prev) => ({
@@ -106,16 +127,6 @@ function App() {
       }));
     }
   };
-
-  useEffect(() => {
-    setFormData((prev) => ({
-      ...prev,
-      totalBalance:
-        (prev.txtMortgageAmt * (prev.txtInterestRate / 100) +
-          prev.txtMortgageAmt) *
-        (prev.txtMortgageTerm * 12),
-    }));
-  }, []);
 
   const handleClearForm = () => {
     setFormData((prev) => ({
@@ -137,9 +148,9 @@ function App() {
       <div className="min-h-screen flex items-center justify-center">
         <div
           id="main"
-          className="flex desktop:flex-row tablet:flex-col mobile:flex-col desktop:rounded-2xl bg-white w-6/12 h-auto"
+          className="flex desktop:flex-row tablet:flex-col mobile:flex-col desktop:rounded-2xl bg-white desktop:w-6/12 mobile:w-auto h-auto"
         >
-          <div className="desktop:w-6/12 px-7 py-6">
+          <div className="desktop:w-6/12  px-7 py-6">
             <div>
               <div className="flex desktop:flex-row mobile:flex-col desktop:justify-between desktop:items-center pb-5">
                 <h1 className="font-bold text-lg">Mortgage Calculator</h1>
@@ -280,17 +291,26 @@ function App() {
                 <div className=" relative bg-[#D9DB30] rounded-md">
                   <div className="relative top-1 h-auto bg-[#0E2431] rounded-[5px] p-5 flex flex-col gap-2">
                     <span className="text-sm text-gray-400 flex">
-                      Your monthly repayments
+                      {formData.typeRepayment
+                        ? "Your monthly repayments"
+                        : "Your monthly interest"}
                     </span>
                     <h1 className="text-[#D9DB30] font-semibold text-4xl">
-                      {formData.monthlyRepayment}
+                      {formData.typeRepayment
+                        ? formData.monthlyRepayment
+                        : formData.monthlyInterest}
                     </h1>
+
                     <div className="divider w-full h-[1px] bg-[#B1BABF] my-5" />
                     <span className="text-sm text-gray-400 flex">
-                      Total you'll repay over the term
+                      {formData.typeRepayment
+                        ? "Total you'll repay over the term"
+                        : "Total interest over the term"}
                     </span>
                     <h1 className="text-white font-semibold text-2xl">
-                      {formData.totalBalance}
+                      {formData.typeRepayment
+                        ? formData.totalBalance
+                        : formData.totalMonthlyInterest}
                     </h1>
                   </div>
                 </div>

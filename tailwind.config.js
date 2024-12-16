@@ -6,7 +6,7 @@ export default {
     screens: {
       mobile: "320px",
       tablet: "641px",
-      desktop: "1190px",
+      desktop: "1440px",
     },
   },
   plugins: [],
