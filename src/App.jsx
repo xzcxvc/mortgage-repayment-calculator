@@ -86,12 +86,12 @@ function App() {
       const monthlyInterest = (mortgageAmt / mortgageTerm) * interestRate;
       const totaMonthlyInterest = (monthlyInterest * mortgageTerm);
 
-      const formattedTotalBalance = `$${totalBalance.toLocaleString(undefined, {
+      const formattedTotalBalance = `₱${totalBalance.toLocaleString(undefined, {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2,
       })}`;
 
-      const formattedMonthlyRepayment = `$${monthlyRepayment.toLocaleString(
+      const formattedMonthlyRepayment = `₱${monthlyRepayment.toLocaleString(
         undefined,
         {
           minimumFractionDigits: 2,
@@ -99,7 +99,7 @@ function App() {
         }
       )}`;
 
-      const formattedTotalInterest = `$${totaMonthlyInterest.toLocaleString(
+      const formattedTotalInterest = `₱${totaMonthlyInterest.toLocaleString(
         undefined,
         {
           minimumFractionDigits: 2,
@@ -107,7 +107,7 @@ function App() {
         }
       )}`;
 
-      const formattedMonthlyInterest = `$${monthlyInterest.toLocaleString(
+      const formattedMonthlyInterest = `₱${monthlyInterest.toLocaleString(
         undefined,
         {
           minimumFractionDigits: 2,
