@@ -84,7 +84,7 @@ function App() {
         mortgageAmt / mortgageTerm;
       const totalBalance = monthlyRepayment * mortgageTerm;
       const monthlyInterest = (mortgageAmt / mortgageTerm) * interestRate;
-      const totaMonthlyInterest = (monthlyInterest * mortgageTerm);
+      const totaMonthlyInterest = monthlyInterest * mortgageTerm;
 
       const formattedTotalBalance = `₱${totalBalance.toLocaleString(undefined, {
         minimumFractionDigits: 2,
@@ -150,7 +150,7 @@ function App() {
       <div className="min-h-screen flex items-center justify-center">
         <div
           id="main"
-          className="flex desktop:flex-row tablet:flex-col mobile:flex-col desktop:rounded-2xl bg-white desktop:w-6/12 mobile:w-auto h-auto"
+          className="flex desktop:flex-row tablet:flex mobile:flex-col desktop:rounded-2xl bg-white desktop:w-[980px] tablet:w-[720px] mobile:w-[420px] h-auto"
         >
           <div className="desktop:w-6/12  px-7 py-6">
             <div>

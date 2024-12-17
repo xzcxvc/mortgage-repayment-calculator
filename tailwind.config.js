@@ -4,9 +4,9 @@ export default {
   theme: {
     extend: {},
     screens: {
-      mobile: "320px",
-      tablet: "641px",
-      desktop: "1440px",
+      mobile: "0px",
+      tablet: "640px",
+      desktop: "960px",
     },
   },
   plugins: [],
